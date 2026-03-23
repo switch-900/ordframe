@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordframe Demo</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      background: #111;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="preview" title="Ordframe Demo"></iframe>
+
+  <template id="payload"><!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Ordframe Payload</title>
+</head>
+<body>
+  <h1>Hello from demo.html</h1>
+  <p>Replace everything inside the payload template with your own full HTML.</p>
+  <script>
+    console.log('payload running inside ordframe');
+  </script>
+</body>
+</html></template>
+
+  <script>
+    (function () {
+      var viewerUrl = 'https://ordinals.com/content/33064f05445f5c4d97d6a70585e70cdabb0b52690e61d611afb2b4091aca614bi0';
+      var iframe = document.getElementById('preview');
+      var payload = document.getElementById('payload');
+      var isReady = false;
+      var sent = false;
+      var retryTimer = 0;
+      var retryCount = 0;
+
+      function getPayloadHtml() {
+        return payload.innerHTML.trim();
+      }
+
+      function postHtml() {
+        if (!isReady || sent || !iframe.contentWindow) {
+          return;
+        }
+
+        iframe.contentWindow.postMessage({
+          type: 'html-view:render',
+          html: getPayloadHtml()
+        }, '*');
+
+        sent = true;
+      }
+
+      function startRetries() {
+        clearInterval(retryTimer);
+        retryCount = 0;
+
+        retryTimer = setInterval(function () {
+          if (!iframe.contentWindow || sent) {
+            clearInterval(retryTimer);
+            return;
+          }
+
+          if (isReady) {
+            postHtml();
+          }
+
+          retryCount += 1;
+
+          if (retryCount > 20) {
+            clearInterval(retryTimer);
+          }
+        }, 400);
+      }
+
+      window.addEventListener('message', function (event) {
+        var data = event.data;
+        if (!data || typeof data !== 'object') {
+          return;
+        }
+
+        if (data.type === 'html-view-ready') {
+          isReady = true;
+          postHtml();
+        }
+      });
+
+      iframe.addEventListener('load', function () {
+        startRetries();
+      });
+
+      iframe.src = viewerUrl;
+    }());
+  </script>
+</body>
+</html>
