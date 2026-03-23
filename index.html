@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>viewer</title>
+  <style>
+    html,
+    body {
+      margin: 0;
+      height: 100%;
+      background: #111;
+    }
+
+    iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #fff;
+    }
+  </style>
+</head>
+<body>
+  <iframe id="preview" title="Ordframe Demo"></iframe>
+
+  <template id="payload"> <!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Loader</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"/>
+
+  <script type="importmap">
+  {
+    "imports": {
+      "react": "/content/609b117277f1e9c9f27f358fe02db34e13d08915bbcea18770dc36f5f3afcbb2i0",
+      "react/jsx-runtime": "data:text/javascript;base64,aW1wb3J0IFJlYWN0IGZyb20ncmVhY3QnO2V4cG9ydCBjb25zdCBGcmFnbWVudD1SZWFjdC5GcmFnbWVudDtleHBvcnQgZnVuY3Rpb24ganN4KHQscCxrKXtyZXR1cm4gayE9PXZvaWQgMD9SZWFjdC5jcmVhdGVFbGVtZW50KHQsey4uLnAsa2V5Omt9KTpSZWFjdC5jcmVhdGVFbGVtZW50KHQscCl9ZXhwb3J0e2pzeCBhcyBqc3hzfQ==",
+      "react-dom": "/content/609b117277f1e9c9f27f358fe02db34e13d08915bbcea18770dc36f5f3afcbb2i1",
+      "react-dom/client": "/content/4d9308ce08bed11c028acb3d1dd964ea0e9809f51daf141ca0760e745a8070aei0",
+      "three": "/content/0d013bb60fc5bf5a6c77da7371b07dc162ebc7d7f3af0ff3bd00ae5f0c546445i0",
+      "@react-three/fiber": "/content/f1be1caad667af0ec844d1333ad4d38f2cd7cc2855404bba11ac436b53c799b6i0",
+      "@react-three/drei": "/content/ded46f972b0f85ea041359cd94a7878a5e902126fb34ee11dbed1c9ae4dfb1ebi0"
+    }
+  }
+  </script>
+  <script type="module" crossorigin>
+(function(){const t=document.createElement("link").relList;if(t&&t.supports&&t.supports("modulepreload"))return;for(const n of document.querySelectorAll('link[rel="modulepreload"]'))i(n);new MutationObserver(n=>{for(const o of n)if(o.type==="childList")for(const c of o.addedNodes)c.tagName==="LINK"&&c.rel==="modulepreload"&&i(c)}).observe(document,{childList:!0,subtree:!0});function r(n){const o={};return n.integrity&&(o.integrity=n.integrity),n.referrerPolicy&&(o.referrerPolicy=n.referrerPolicy),n.crossOrigin==="use-credentials"?o.credentials="include":n.crossOrigin==="anonymous"?o.credentials="omit":o.credentials="same-origin",o}function i(n){if(n.ep)return;n.ep=!0;const o=r(n);fetch(n.href,o)}})();const f="392220542151890";function l(e){return typeof e=="string"&&/^[a-f0-9]{64}i\d+$/i.test(e)}function s(e){if(e==null)return"";let t=String(e).trim();if(!t)return"";try{/%[0-9a-f]{2}/i.test(t)&&(t=decodeURIComponent(t))}catch{}if(l(t))return t.toLowerCase();const r=(t.match(/[a-f0-9]{64}i\d+/i)||[])[0];return r?r.toLowerCase():""}function m(){try{const r=new URLSearchParams(location.search),i=["id","inscription","inscriptionId","insc","self","selfId","delegate","delegateId","delegated","parent","src"];for(const n of i){const o=s(r.get(n));if(o)return o}}catch{}const e=s(location.pathname);if(e)return e;const t=s(location.href);if(t)return t;try{const r=globalThis.frameElement,i=r&&(r.getAttribute&&r.getAttribute("src")||r.src),n=s(i);if(n)return n}catch{}try{const r=s(document.referrer);if(r)return r}catch{}return""}function g(){let e=document.getElementById("bootStatus");return e||(e=document.createElement("div"),e.id="bootStatus",document.body.appendChild(e),e)}function a(e,{error:t=!1}={}){const r=g();if(!e){r.className="",r.innerHTML="";return}r.className=`on${t?" err":""}`,r.innerHTML=String(e)}function p(){const e=new URLSearchParams(location.search),t=e.get("main");if(t&&t.trim())return t.trim();const r=e.get("sat")||f;return r&&String(r).trim()?`/r/sat/${String(r).trim()}/at/-1/content`:""}function h(e){return new Promise((t,r)=>{const i=document.createElement("script");i.type="module",i.src=e,i.onload=()=>t(!0),i.onerror=()=>r(new Error("Failed to load main module")),document.head.appendChild(i)})}function y(){if(document.getElementById("splash"))return;const e=document.createElement("div");e.id="splash",e.innerHTML='<svg viewBox="0 0 24 24" fill="none"><path d="M21 12a9 9 0 1 1-9-9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="1.5"/></svg><div class="label">Inscription Viewer</div><div class="spin"></div>',document.body.appendChild(e)}function d(){const e=document.getElementById("splash");e&&(e.classList.add("hide"),setTimeout(()=>e.remove(),500))}async function u(){const e=m(),t=p();if(y(),!t){d(),a("No main module configured. Add <code>?sat=&lt;satNumber&gt;</code> or <code>?main=&lt;url&gt;</code>.",{error:!0});return}const r=12e3;let i=!1;const n=setTimeout(()=>{if(i)return;const o=l(e)?`Self: <code>${e}</code><br/>`:"";a(`${o}Still loading… This gateway may block <code>/r/*</code> recursion.<br/>Main: <code>${t}</code>`,{error:!1})},r);try{await h(t),i=!0,d(),a("")}catch(o){i=!0,d();const c=l(e)?`Self: <code>${e}</code><br/>`:"";a(`${c}<b>Failed to load main module</b><br/>${String(o&&o.message||"")}<br/>Main: <a href="${t}" target="_blank" rel="noopener noreferrer">${t}</a>`,{error:!0})}finally{clearTimeout(n)}}document.readyState==="loading"?document.addEventListener("DOMContentLoaded",u,{once:!0}):u();
+
+</script>
+  <style>
+:root{--bg:#050508;--surface:#0d0d14;--surface2:#14141f;--border:#1c1c2e;--border-hi:#7c3aed;--accent:#7c3aed;--accent2:#a855f7;--text:#c8c8d8;--dim:#555568;--hi:#e8e8f0}*{box-sizing:border-box}html,body{height:100%;margin:0;background:var(--bg);color:var(--text);font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,Liberation Mono,Courier New,monospace}#splash{position:fixed;top:0;right:0;bottom:0;left:0;z-index:100;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:var(--bg);transition:opacity .4s}#splash.hide{opacity:0;pointer-events:none}#splash svg{width:48px;height:48px;opacity:.7}#splash .label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);font-weight:700}#splash .spin{width:18px;height:18px;border:2px solid var(--border);border-top-color:var(--accent2);border-radius:50%;animation:sp .8s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}#bootStatus{position:fixed;left:max(10px,env(safe-area-inset-left,0px));right:max(10px,env(safe-area-inset-right,0px));bottom:max(10px,env(safe-area-inset-bottom,0px));z-index:2000;display:none;padding:10px 12px;border-radius:12px;border:1px solid rgba(255,255,255,.12);background:rgba(5,5,8,.92);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:var(--text);font-size:12px;line-height:1.35}#bootStatus.on{display:block}#bootStatus.err{border-color:#f8717173}#bootStatus a{color:var(--accent2);text-decoration:none}
+
+</style>
+</head>
+<body>
+  <div id="root"></div>
+
+  <style>#btnPortal{display:none!important}</style>
+  
+</body>
+</html>
+ </template>
+
+  <script>
+    (function () {
+      var viewerUrl = 'https://ordinals.com/content/33064f05445f5c4d97d6a70585e70cdabb0b52690e61d611afb2b4091aca614bi0';
+      var iframe = document.getElementById('preview');
+      var payload = document.getElementById('payload');
+      var isReady = false;
+      var sent = false;
+      var retryTimer = 0;
+      var retryCount = 0;
+
+      function getPayloadHtml() {
+        return payload.innerHTML.trim();
+      }
+
+      function postHtml() {
+        if (!isReady || sent || !iframe.contentWindow) {
+          return;
+        }
+
+        iframe.contentWindow.postMessage({
+          type: 'html-view:render',
+          html: getPayloadHtml()
+        }, '*');
+
+        sent = true;
+      }
+
+      function startRetries() {
+        clearInterval(retryTimer);
+        retryCount = 0;
+
+        retryTimer = setInterval(function () {
+          if (!iframe.contentWindow || sent) {
+            clearInterval(retryTimer);
+            return;
+          }
+
+          if (isReady) {
+            postHtml();
+          }
+
+          retryCount += 1;
+
+          if (retryCount > 20) {
+            clearInterval(retryTimer);
+          }
+        }, 400);
+      }
+
+      window.addEventListener('message', function (event) {
+        var data = event.data;
+        if (!data || typeof data !== 'object') {
+          return;
+        }
+
+        if (data.type === 'html-view-ready') {
+          isReady = true;
+          postHtml();
+        }
+      });
+
+      iframe.addEventListener('load', function () {
+        startRetries();
+      });
+
+      iframe.src = viewerUrl;
+    }());
+  </script>
+</body>
+</html>
